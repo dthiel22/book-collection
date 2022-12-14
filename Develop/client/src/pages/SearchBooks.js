@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
+
+import { useMutation } from '@apollo/client';
+import { SAVE_BOOK } from '../utils/mutations';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -13,6 +16,9 @@ const SearchBooks = () => {
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
+
+  //TODO: query object for saving book
+  const [saveBook, { error, data }] = useMutation(SAVE_BOOK); 
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -60,14 +66,31 @@ const SearchBooks = () => {
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
+
     if (!token) {
       return false;
     }
 
     try {
-      const response = await saveBook(bookToSave, token);
+      console.log(bookToSave)
+      console.log(token)
+      const response = await saveBook({
+        variables: { 
+          token: token,
+          input: {
+            bookId: bookToSave.bookId,
+            title: bookToSave.title,
+            authors: bookToSave.authors,
+            description: bookToSave.description,
+            image: bookToSave.image,
+            link: bookToSave.link
+          }
+        },
+      });
+
 
       if (!response.ok) {
+        console.log(response)
         throw new Error('something went wrong!');
       }
 
