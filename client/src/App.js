@@ -6,7 +6,8 @@ import Navbar from "./components/Navbar";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3001/graphql',
+  // uri: 'http://localhost:3001/graphql',
+  uri: 'https://at-book-collection.herokuapp.com/graphql',
   cache: new InMemoryCache(),
 });
 

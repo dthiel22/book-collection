@@ -1,7 +1,8 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
-const cors = require('cors')
+
+// const cors = require('cors')
 
 const { authMiddleware } = require('./utils/auth');
 
@@ -16,9 +17,9 @@ const server = new ApolloServer({
   // context: authMiddleware,
 });
 
-app.use(cors({
-  origin: 'http://localhost:3000'
-}));
+// app.use(cors({
+//   origin: 'http://localhost:3000'
+// }));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -27,10 +28,10 @@ app.use(express.json());
 //   app.use(express.static(path.join(__dirname, 'build')));
 // }
 
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static(path.join(__dirname, '/public')))
 
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, '/public'));
 });
 
 
